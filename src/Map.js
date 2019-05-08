@@ -1,8 +1,15 @@
 import React from 'react';
+import ReactGA from 'react-ga';
 import GoogleMapReact from 'google-map-react';
 import pin from './pin.svg';
 
-const pinClickHandler = (title, address) => alert(`${title} \n${address}`);
+const pinClickHandler = (title, address) => {
+  alert(`${title} \n${address}`);
+  ReactGA.event({
+    category: 'User',
+    action: 'Clicked Pin'
+  });
+};
 
 const Marker = ({ src, text, title, address }) => (
   <div onClick={() => pinClickHandler(title, address)}>
@@ -32,7 +39,6 @@ const Map = ({ bootstrapURLKeys, defaultCenter, defaultZoom, data }) => {
             address={parsedDataPoint[2]}
           />
         ))}
-        {console.log(`welp`, parsedData)}
       </GoogleMapReact>
     </div>
   );

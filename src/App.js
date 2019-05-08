@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import data from './data.json';
 import Map from './Map';
+import ListItem from './ListItem';
 import './App.css';
 require('dotenv').config();
+
+(function initalizeReactGA() {
+  ReactGA.initialize('UA-139884750-1');
+  ReactGA.pageview('/homepage');
+})();
 
 class App extends Component {
   constructor() {
@@ -15,13 +22,16 @@ class App extends Component {
   }
   getData = () => {
     this.setState({ data: data });
-    console.log(data);
+    ReactGA.event({
+      category: 'User',
+      action: 'Clicked Find Locations'
+    });
   };
 
   render() {
     return (
-      <div className="App">
-        <body>
+      <body className="App">
+        <div>
           <p>PrEP Me</p>
           <button
             style={{ marginBottom: '10px' }}
@@ -37,13 +47,16 @@ class App extends Component {
             defaultZoom={this.state.zoom}
             data={this.state.data}
           />
+
           {this.state.data.map(el => (
-            <div style={{ paddingBottom: '10px' }}>
-              <h3>{el.title}</h3> <p>{el.field_address}</p>
-            </div>
+            <ListItem
+              title={el.title}
+              address={el.field_address}
+              telephone={el.field_phone}
+            />
           ))}
-        </body>
-      </div>
+        </div>
+      </body>
     );
   }
 }
