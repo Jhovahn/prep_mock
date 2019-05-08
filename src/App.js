@@ -1,23 +1,48 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import data from './data.json';
+import Map from './Map';
 import './App.css';
+require('dotenv').config();
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      data: [],
+      center: { lat: 40.6903, lng: -73.9272 },
+      zoom: 13
+    };
+  }
+  getData = () => {
+    this.setState({ data: data });
+    console.log(data);
+  };
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>Hello World</p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
+        <body>
+          <p>PrEP Me</p>
+          <button
+            style={{ marginBottom: '10px' }}
+            onClick={() => this.getData()}
           >
-            Learn React
-          </a>
-        </header>
+            Find Locations
+          </button>
+          <Map
+            bootstrapURLKeys={{
+              key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+            }}
+            defaultCenter={this.state.center}
+            defaultZoom={this.state.zoom}
+            data={this.state.data}
+          />
+          {this.state.data.map(el => (
+            <div style={{ paddingBottom: '10px' }}>
+              <h3>{el.title}</h3> <p>{el.field_address}</p>
+            </div>
+          ))}
+        </body>
       </div>
     );
   }
